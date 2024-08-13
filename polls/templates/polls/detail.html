@@ -1,0 +1,30 @@
+{#<h1>{{ question.question_text }}</h1>#}
+{#模板系统使用 dot-lookup 语法来访问变量属性。#}
+{#在 {{ question.question_text }} 的例子中，#}
+{#首先 Django 对对象问题进行字典查找。#}
+{#如果做不到这一点，它会尝试属性查找 - 在这种情况下，这是有效的。#}
+{#如果属性查找失败，它将尝试列表索引查找。#}
+
+
+{#方法调用发生在 {% for %} 循环中：#}
+{#    question.choice_set.all 被解释为 Python 代码 question.choice_set.all（），#}
+{#    它返回 Choice 对象的可迭代对象，适合在 {% for %} 标签中使用。#}
+{#    <ul>#}
+{#    {% for choice in question.choice_set.all %}#}
+{#        <li>{{ choice.choice_text }}</li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ question.question_text }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+    </fieldset>
+    <input type="submit" value="Vote">
+</form>
